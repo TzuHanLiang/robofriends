@@ -3,6 +3,7 @@ import CardList from './CardList';
 import SearchBox from './SearchBox';
 // import {robots} from './robots';
 import './App.css';
+import Scroll from './Scroll';
 
 
 class App extends Component {
@@ -20,12 +21,9 @@ class App extends Component {
 		console.log("componentDiMount");
 
 		fetch('https://jsonplaceholder.typicode.com/users')
-			.then(response => {
-				return response.json(); 
-			})
-			.then(users => { 
-				this.setState({ robots: users });
-			});
+			.then(response => response.json())
+			.then(users => this.setState({ robots: users }));
+			//fetch is a method on the window object.
 		// this.setState will change state, so when the state change will triggrt Updating
 		// will automatelly run methods in Updating in order.
 	}
@@ -36,16 +34,23 @@ class App extends Component {
 
 	render(){
 		console.log("render");
-		const filterRobots = this.state.robots.filter(robot => {
+		if(this.state.robots.length === 0){
+			return <h1 className='tc'>Loading...</h1>
+		}else{
+			const filterRobots = this.state.robots.filter(robot => {
 			return robot.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
 		});
 		return(
 			<div className='tc'>
 			<h1 className='f1'>Robofriends</h1>
 			<SearchBox searchChange={ this.onSearchChange }/>
-			<CardList robots={ filterRobots } />
+			<Scroll>
+				<CardList robots={ filterRobots } />
+			</Scroll>
 			</div>
 		);
+		}
+		
 
 	}
 }
