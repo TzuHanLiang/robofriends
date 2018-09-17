@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CardList from './CardList';
 import SearchBox from './SearchBox';
-import {robots} from './robots';
+// import {robots} from './robots';
 import './App.css';
 
 
@@ -18,7 +18,16 @@ class App extends Component {
 
 	componentDidMount(){
 		console.log("componentDiMount");
-		this.setState({ robots: robots });
+
+		fetch('https://jsonplaceholder.typicode.com/users')
+			.then(response => {
+				return response.json(); 
+			})
+			.then(users => { 
+				this.setState({ robots: users });
+			});
+		// this.setState will change state, so when the state change will triggrt Updating
+		// will automatelly run methods in Updating in order.
 	}
 
 	onSearchChange = (event) => {
